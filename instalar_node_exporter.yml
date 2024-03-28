@@ -1,0 +1,20 @@
+- hosts: seus_servidores
+  remote_user: nataliagranato
+  become: true
+
+- name: Configurar tipos de chave de host permitidos
+  hosts: seus_servidores
+  gather_facts: no
+  tasks:
+  - name: Adicionar tipos de chave de host ao cliente SSH
+    lineinfile:
+      path: /etc/ssh/ssh_config
+      line: "{{ item }}"
+      state: present
+    with_items:
+    - "HostKeyAlgorithms ssh-ed25519,ecdsa-sha2-nistp256,ssh-rsa,rsa-sha2-512,rsa-sha2-256"
+
+- hosts: seus_servidores
+  become: true
+  roles:
+  - node_exporter

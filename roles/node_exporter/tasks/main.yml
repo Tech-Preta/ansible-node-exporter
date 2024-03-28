@@ -1,0 +1,57 @@
+- name: Baixar o Node Exporter
+  get_url:
+    url: "{{ node_exporter_url }}"
+    dest: "/tmp/node_exporter.tar.gz"
+  become: true
+
+
+- name: Criar diretório para o Node Exporter
+  file:
+    path: "/opt/node_exporter"
+    state: directory
+  become: true
+
+- name: Extrair o Node Exporter
+  unarchive:
+    src: "/tmp/node_exporter.tar.gz"
+    dest: "/opt/node_exporter"
+    remote_src: yes
+    creates: "/opt/node_exporter/node_exporter-1.7.0.linux-amd64/node_exporter"
+  become: true
+
+- name: Mover o Node Exporter para /usr/local/bin
+  command:
+    cmd: mv /opt/node_exporter/node_exporter-1.7.0.linux-amd64/node_exporter /usr/local/bin
+  become: true
+
+- name: Criar usuário para o Node Exporter
+  user:
+    name: node_exporter
+    system: yes
+    shell: /bin/false
+  become: true
+
+- name: Copiar o serviço systemd do Node Exporter
+  template:
+    src: "node_exporter.service.j2"
+    dest: "/etc/systemd/system/node_exporter.service"
+  become: true
+
+
+- name: Definir permissões nos arquivos temporários do Ansible
+  file:
+    path: "/tmp/ansible_tmp"
+    state: directory
+    mode: '0755'
+    owner: root
+    group: root
+  delegate_to: localhost
+
+
+- name: Habilitar e iniciar o serviço do Node Exporter
+  systemd:
+    name: node_exporter.service
+    enabled: yes
+    state: started
+  become: true
+  become_method: sudo

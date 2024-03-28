@@ -1,0 +1,8 @@
+[seus_servidores]
+192.168.0.146 ansible_user=nataliagranato
+
+[all:vars]
+ansible_python_interpreter=/usr/bin/python3
+
+[seus_servidores:vars]
+node_exporter_url=https://github.com/prometheus/node_exporter/releases/download/v1.7.0/node_exporter-1.7.0.linux-amd64.tar.gz
