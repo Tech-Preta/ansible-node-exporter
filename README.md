@@ -45,13 +45,33 @@ servidor2 ansible_host=192.168.1.20
 ```
 
 5. **Teste a Conexão SSH**
-- Verifique se o Ansible pode se conectar aos hosts:
+- Antes de tudo, verifique se o Ansible pode se conectar aos hosts. Execute o comando abaixo onde está localizado o seu arquivo de inventário:
 
 ```
 ansible -i hosts.ini -m ping servidores
-
 ```
+
+- Caso tenha sucesso você verá algo como:
+```
+192.168.0.146 | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}
+```
+
 6. Crie Seus Playbooks:
 - Agora você pode criar seus playbooks Ansible para automatizar tarefas nos servidores.
 
+# Executando o Ansible Node Exporter
 
+Para executar o playbook instalar_node_exporter.yml, você pode usar o comando `ansible-playbook`. Certifique-se de estar no diretório onde o playbook está localizado. Aqui está o comando que você pode usar:
+```
+ansible-playbook instalar_node_exporter.yml --ask-become-pass
+```
+
+Se o seu playbook estiver em um diretório específico, você precisará fornecer o caminho completo para o playbook:
+```
+ansible-playbook /caminho/para/o/playbook/instalar_node_exporter.yml
+```
+
+Certifique-se de ter um arquivo de inventário configurado corretamente e definido os hosts alvo no playbook ou passá-los como argumentos na linha de comando, conforme necessário. Isso garantirá que o Ansible execute as tarefas definidas no playbook nos hosts especificados.
